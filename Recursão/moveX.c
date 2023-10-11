@@ -15,7 +15,7 @@ void moveX (char *string){
 }
 
 int main () {
-    char input[100];
+    char input[1001];
     scanf("%s", input);
     moveX(input);
     return 0;
