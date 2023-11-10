@@ -1,63 +1,64 @@
-// crt_strstr.c
+#include<stdio.h>
+#include<string.h>
 
-#include <string.h>
-#include <stdio.h>
-
-int primeiraSubString (char *string, char *sub){
-    char *posicao;
+int existeSub (char *string, char *sub){
+  char *posicao;
 
     if (*string == '\0') {
+        return -1;
+    } else {
+        posicao = strstr( string, sub );
+        
+        if ( posicao != NULL )
+            return 0;
+
+        return -1;
+    }
+}
+
+int primeiraSub (char *string, char *sub){
+  char *posicao;
+
+    if (existeSub(string,sub) != 0) {
         return -1;
     } else {
         posicao = strstr( string, sub ); 
 
         if ( posicao != NULL ){
-            return (int)(posicao - string +1 );
-        } else {
-            return -1;
-        }
-    }
-}
-
-int ultimaSubString (char *string, char *sub, int ultPos){
-    char *posicao;
-
-    if (*string == '\0' || strlen(string) < strlen(sub)) {
-        return ultPos;
-    } else {
-        posicao = strstr( string, sub +1); 
-
-        if ( posicao != NULL ){
-
-            int novaUltPos = (int)(posicao - string +1 );
-            ultimaSubString(string + ultPos, sub, novaUltPos);
-            return ultPos;
+            return (int)(posicao - string);
         } 
 
-        return ultPos;
+        return -1;
     }
 }
 
-int main( ) {
-    char sub[101];
-    char string[100];
+int ultimaSub (char *string, char *sub, int index){
 
-
-    scanf( "%s", string );
-    scanf( "%s", sub );
-    
-    int primeiraPosicao = primeiraSubString (string, sub);
-    printf ("%d\n", primeiraPosicao);
-
-    if (primeiraPosicao != -1) {
-
+    if(existeSub(string, sub) == 0){
+        return index;
     }
 
-    int ultimaPosicao =  ultimaSubString (string + primeiraPosicao, sub, primeiraPosicao);
-    printf("%d\n", ultimaPosicao);
-    
-    printf("%d\n", strlen(sub));
-    int distancia = (ultimaPosicao + strlen(sub)) - primeiraPosicao ;
-    printf("%d\n", distancia);
-    return 0;
+    return ultimaSub(--string, sub, --index);
+}
+
+int main(){
+
+  char string[101];
+  char sub[101];
+
+  scanf("%s", string);
+  scanf("%s", sub);
+
+  int primeiroIndex = primeiraSub(string, sub);
+
+  if (primeiroIndex != -1){
+
+    int ultimoIndex = ultimaSub(&string[strlen(string)], sub, strlen(string));
+    printf("%d\n", ultimoIndex - primeiroIndex + strlen(sub));
+  
+  }else{
+    printf("0\n");
+  }
+
+  return 0;
 }
